@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Namma Kadai - Local Store Marketplace</title>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/app-config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@600;800&family=Mukta+Malar:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7f2;--card:#fff;--ink:#1b2a22;--mut:#5f6f66;--g:#1f6b45;--gl:#e3f0e8;--y:#f2b705;--r:#d6362b;--line:#dfe4dc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a15;--card:#1b2620;--ink:#eef3ee;--mut:#9fb0a5;--g:#4fbf86;--gl:#22372b;--line:#2c3b32}}
+:root[data-theme="dark"]{--bg:#121a15;--card:#1b2620;--ink:#eef3ee;--mut:#9fb0a5;--g:#4fbf86;--gl:#22372b;--line:#2c3b32}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Mukta Malar",system-ui,sans-serif}
+h1,h2,h3{font-family:"Baloo Thambi 2",system-ui,sans-serif;margin:0;line-height:1.15}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--g);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+header h1{font-size:1.5rem;font-weight:800}header h1 span{color:var(--y)}
+nav{display:flex;gap:6px}
+nav button{border:0;border-radius:99px;padding:6px 14px;font:inherit;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+nav button.on{background:var(--y);color:#1b2a22;font-weight:600}
+main{max-width:980px;margin:0 auto;padding:16px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--y);outline-offset:2px}
+.btn{border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer;background:var(--g);color:#fff}
+.btn.alt{background:var(--gl);color:var(--g)}.btn.y{background:var(--y);color:#1b2a22}.btn:disabled{opacity:.5;cursor:default}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.store{cursor:pointer;border-left:6px solid var(--g)}.store.mini{border-left-color:var(--y)}
+.tag{display:inline-block;font-size:.8rem;padding:1px 10px;border-radius:99px;background:var(--gl);color:var(--g);font-weight:600}
+.tag.mini{background:#fdf0c2;color:#6b5100}
+.mut{color:var(--mut);font-size:.9rem}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.two{display:grid;grid-template-columns:1fr;gap:16px}@media(min-width:800px){.two{grid-template-columns:2fr 1fr}}
+.qty{display:flex;align-items:center;gap:8px}.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.steps{display:flex;gap:4px;margin-top:8px}.steps i{flex:1;height:6px;border-radius:3px;background:var(--line)}.steps i.d{background:var(--g)}
+.pay label{display:flex;gap:8px;align-items:center;padding:6px 0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;z-index:9}
+h2{margin-bottom:10px;font-size:1.4rem}h3{font-size:1.1rem;margin-bottom:6px}
+.stack>*+*{margin-top:12px}
+.star{border:0;background:none;font-size:1.6rem;line-height:1;cursor:pointer;color:var(--line);padding:0 2px}.star.on{color:var(--y)}
+.ph{width:100%;height:110px;object-fit:cover;border-radius:8px;margin-bottom:8px}.pr{display:grid;grid-template-columns:1fr 64px auto;gap:6px;align-items:center;border-top:1px solid var(--line);padding-top:6px}.pr input{width:64px}
+:root{--bg:#f6f8f3;--g:#176b45;--gl:#e7f3eb;--line:#e5eae2}
+body{font-size:16px}
+header{background:linear-gradient(110deg,#145b3a,#218052);padding:12px max(20px,calc((100vw - 1120px)/2));box-shadow:0 3px 16px #153e2822}
+header h1{font-size:1.7rem}
+nav{flex-wrap:wrap}
+nav button{transition:background .18s,transform .18s}
+nav button:hover{background:rgba(255,255,255,.28);transform:translateY(-1px)}
+main{max-width:1120px;padding:24px 20px 48px}
+.shop-hero{position:relative;overflow:hidden;margin:0 0 26px;padding:clamp(24px,5vw,48px);border-radius:22px;color:#fff;background:linear-gradient(120deg,#145b3a,#258253 68%,#42a46b);box-shadow:0 16px 35px #174e3026}
+.shop-hero:after{content:"";position:absolute;width:260px;height:260px;right:-58px;top:-94px;border:34px solid #ffffff16;border-radius:50%;pointer-events:none}
+.shop-hero h2{max-width:610px;margin:0 0 10px;font-size:clamp(2rem,5vw,3.2rem);line-height:1.08}
+.shop-hero p{max-width:560px;margin:0;color:#e1f2e7;font-size:1.08rem}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;margin-bottom:14px;padding:5px 12px;border:1px solid #ffffff40;border-radius:99px;background:#ffffff14;font-size:.86rem}
+.store-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0 22px}
+.store-search{flex:1 1 240px;min-height:46px;padding:10px 14px}
+.filter-row{display:flex;flex-wrap:wrap;gap:8px}
+.filter-chip{border:1px solid var(--line);border-radius:99px;padding:8px 15px;background:var(--card);color:var(--mut);font:inherit;font-weight:600;cursor:pointer;transition:all .18s}
+.filter-chip:hover{border-color:var(--g);color:var(--g)}
+.filter-chip.on{border-color:var(--g);background:var(--g);color:white}
+.store-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:16px}
+.store-card{position:relative;min-height:150px;padding:20px;border:1px solid var(--line);border-left:4px solid var(--g);border-radius:16px;box-shadow:0 5px 18px #15281b08;transition:transform .18s,box-shadow .18s,border-color .18s}
+.store-card.mini{border-left-color:var(--y)}
+.store-card:hover{transform:translateY(-3px);box-shadow:0 12px 25px #15281b12}
+.store-open{display:block;width:100%;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer}
+.store-open:focus-visible{outline:3px solid var(--y);outline-offset:4px;border-radius:8px}
+.site-footer{max-width:1120px;margin:0 auto;padding:0 20px 24px;text-align:center}
+.site-footer a{color:var(--g);font-size:.9rem}
+.store-title{padding-right:34px}
+.store-heart{position:absolute;top:15px;right:15px;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:var(--card);color:var(--mut);font-size:1.2rem;line-height:1;cursor:pointer}
+.store-heart:hover,.store-heart.saved{border-color:#f1c5bd;background:#fff3f0;color:#d74336}
+.store-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+.section-heading{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:8px;margin:0 0 12px}
+.section-heading h2{margin:0}
+.empty-state{padding:24px;border:1px dashed var(--line);border-radius:14px;background:var(--card);color:var(--mut)}
+.card{border-radius:15px;box-shadow:0 4px 18px #15281b08}
+.btn{transition:filter .15s,transform .15s}
+.btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+@media(max-width:650px){header{align-items:flex-start;padding:10px 14px}header h1{font-size:1.4rem}nav{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}nav button{flex:0 0 auto;padding:6px 12px;font-size:.9rem}main{padding:18px 14px 36px}.shop-hero{border-radius:17px}.store-toolbar{align-items:stretch}.store-search{flex-basis:100%}.store-grid{grid-template-columns:1fr}.store-card{min-height:130px}.site-footer{padding:0 14px 20px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Namma <span>Kadai</span></h1>
+  <nav id="nav"></nav>
+</header>
+<main id="app"></main>
+<footer class="site-footer"><a href="/privacy-policy.html">Privacy policy</a></footer>
+<script>
+const KEY="nammakadai-v1";
+const API_BASE=String(window.NAMMA_KADAI_API_URL||"").replace(/\/+$/,"");
+const apiUrl=path=>API_BASE+"/api"+path;
+let S={stores:[],orders:[],partners:[]},last="";
+const mine=()=>{try{return JSON.parse(localStorage.getItem(KEY+"-mine"))||[]}catch(e){return[]}};
+const addMine=id=>{try{localStorage.setItem(KEY+"-mine",JSON.stringify([id,...mine()]))}catch(e){}};
+async function api(path,method,body,hdr){
+ try{const r=await fetch(apiUrl(path),{method:method||"GET",headers:{"Content-Type":"application/json",...(hdr||{})},body:body?JSON.stringify(body):undefined});
+ const j=await r.json().catch(()=>({}));if(!r.ok){toast(j.error||"Something went wrong. Try again.");return null}return j}
+ catch(e){toast("Cannot reach the server. Check your internet.");return null}}
+const qget=(p,h)=>fetch(apiUrl(p),{headers:h||{}}).then(r=>r.ok?r.json():null).catch(()=>null);
+async function sync(force){
+ const st=await qget("/state");if(!st)return;
+ let orders=[];
+ if(U.role==="cust"){const ids=mine();if(ids.length)orders=await qget("/orders?ids="+ids.join(","))||[]}
+ else if(U.role==="owner"&&U.ok[U.owner])orders=await qget("/stores/"+U.owner+"/orders",{"x-store-pin":U.pins[U.owner]})||[];
+ else if(U.role==="admin"&&U.akey)U.ov=await qget("/admin/overview",{"x-admin-key":U.akey});
+ else if(U.role==="rider"&&U.partner)orders=await qget("/partners/"+U.partner+"/orders",ph2())||[];
+ const sig=JSON.stringify([st,orders,U.role,U.ov]);if(sig===last&&!force)return;last=sig;
+ S.stores=st.stores;S.partners=st.partners;S.orders=orders;S.loaded=true;
+ const a=document.activeElement;if(force||!(a&&/INPUT|SELECT/.test(a.tagName)))render();
+}
+setInterval(()=>sync(),6000);
+const U={ok:{},pins:{},rate:{},role:"cust",pos:null,store:null,cart:{},owner:1,partner:null,q:"",pay:"cod",storeFilter:"all"};
+
+const $=s=>document.querySelector(s);
+const inr=n=>"₹"+Math.round(n);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function nativeGeo(){
+ const cap=window.Capacitor;
+ return cap&&cap.isNativePlatform()&&cap.isPluginAvailable("Geolocation")?cap.registerPlugin("Geolocation"):null;
+}
+function getPosition(options,success,error){
+ const plugin=nativeGeo();
+ if(plugin){plugin.getCurrentPosition(options).then(success,error);return}
+ if(navigator.geolocation){navigator.geolocation.getCurrentPosition(success,error,options);return}
+ error(new Error("Location is not supported on this device"));
+}
+function km(a,b){const R=6371,d=x=>x*Math.PI/180,dl=d(b.lat-a.lat),dn=d(b.lng-a.lng);const h=Math.sin(dl/2)**2+Math.cos(d(a.lat))*Math.cos(d(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2400)}
+const STAGES=["placed","accepted","partner assigned","picked up","delivered"];
+const fee=o=>o.pos?Math.round(20+4*km(o.pos,S.stores.find(s=>s.id===o.storeId))):30;
+
+function nav(){
+ const r=[["cust","Shop"],["owner","Store owner"],["rider","Delivery partner"],["admin","Admin"]];
+ $("#nav").innerHTML=r.map(([k,l])=>`<button class="${U.role===k?"on":""}" onclick="U.role='${k}';sync(true)">${l}</button>`).join("");
+}
+function render(){nav();if(!S.loaded){$("#app").innerHTML=window.Capacitor?.isNativePlatform?.()&&!API_BASE?'<div class="card stack" style="max-width:560px;margin:32px auto"><h2>App setup needed</h2><p class="mut">Connect this app to the secure Namma Kadai server before using it. Set the HTTPS server URL in public/app-config.js, then rebuild the Android app.</p></div>':'<p class="mut">Loading stores. If this stays, the server is not reachable.</p>';return}({cust:cust,owner:owner,rider:rider,admin:admin})[U.role]()}
+
+function readFavorites(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(KEY+"-favorites")||"[]");
+  return Array.isArray(saved)?saved.filter(id=>Number.isInteger(id)&&S.stores.some(s=>s.id===id)):[];
+ }catch(e){return []}
+}
+function toggleFavorite(id,event){
+ event.stopPropagation();
+ const favorites=readFavorites(),next=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
+ try{localStorage.setItem(KEY+"-favorites",JSON.stringify(next))}catch(e){toast("Could not save favorites on this device");return}
+ cust();
+}
+function cust(){
+ if(U.store&&!S.stores.find(s=>s.id===U.store))U.store=null;
+ const cartIds=Object.keys(U.cart);
+ const favorites=readFavorites();
+ let stores=S.stores.filter(s=>(s.name+" "+s.area).toLowerCase().includes(U.q.toLowerCase()));
+ if(U.storeFilter==="super"||U.storeFilter==="mini")stores=stores.filter(s=>s.type===U.storeFilter);
+ if(U.storeFilter==="favorites")stores=stores.filter(s=>favorites.includes(s.id));
+ if(U.pos)stores=stores.map(s=>({...s,d:km(U.pos,s)})).sort((a,b)=>a.d-b.d);
+ let h=U.store?"":`<section class="shop-hero"><span class="hero-badge">Fresh finds from shops around you</span><h2>Your neighbourhood, delivered.</h2><p>Shop local stores, discover everyday essentials and get them delivered right to your door.</p></section>`;
+ if(!U.store){
+  h+=`<div class="store-toolbar"><input class="store-search" placeholder="Search stores or neighbourhoods" value="${esc(U.q)}" oninput="U.q=this.value;cust();const x=document.querySelector('.store-search');x.focus();x.setSelectionRange(x.value.length,x.value.length)" aria-label="Search stores or neighbourhoods"><button class="btn y" onclick="locate()">${U.pos?"Location set - refresh":"Use my location"}</button></div>
+  <div class="filter-row" role="group" aria-label="Filter stores">${[["all","All stores"],["super","Supermarkets"],["mini","Mini stores"],["favorites","♥ Favorites"]].map(([v,l])=>`<button class="filter-chip ${U.storeFilter===v?"on":""}" aria-pressed="${U.storeFilter===v}" onclick="U.storeFilter='${v}';cust()">${l}${v==="favorites"?" ("+favorites.length+")":""}</button>`).join("")}</div>
+  <div class="section-heading" style="margin-top:24px"><h2>${U.storeFilter==="favorites"?"Your favorite stores":"Stores near you"}</h2><span class="mut">${stores.length} ${stores.length===1?"store":"stores"}${U.pos?" · sorted by distance":""}</span></div>
+  <div class="grid store-grid">`+stores.map(s=>`<article class="card store-card ${s.type}"><button class="store-heart ${favorites.includes(s.id)?"saved":""}" aria-label="${favorites.includes(s.id)?"Remove "+esc(s.name)+" from favorites":"Add "+esc(s.name)+" to favorites"}" aria-pressed="${favorites.includes(s.id)}" onclick="toggleFavorite(${s.id},event)">${favorites.includes(s.id)?"♥":"♡"}</button><button class="store-open" onclick="U.store=${s.id};cust()"><div class="row"><h3 class="store-title">${esc(s.name)}</h3><span class="tag ${s.type}">${s.type==="super"?"Supermarket":"Mini store"}</span></div><div class="store-meta"><span class="mut">${esc(s.area)}</span>${s.d!=null?`<span class="tag">${s.d.toFixed(1)} km away</span>`:""}</div><div class="mut" style="margin-top:7px">${s.items.length} items · ${rt(s.rating)}</div><div class="mut" style="margin-top:10px;color:var(--g);font-weight:600">Explore store →</div></button></article>`).join("")+`</div>`;
+  if(!stores.length)h+=`<div class="empty-state">${U.storeFilter==="favorites"?"No favorites yet. Tap the heart on a store to save it here.":S.stores.length?"No store matches your filters. Try another category or search.":"No stores yet. Store owners can register from the Store owner tab."}</div>`;
+  h+=myOrders();
+ }else{
+  const st=S.stores.find(s=>s.id===U.store);
+  const cartStore=cartIds.length&&U.cartStore!==U.store;
+  h+=`<div class="two"><div><button class="btn alt" onclick="U.store=null;cust()">Back to stores</button><h2 style="margin-top:10px">${esc(st.name)}</h2><div class="mut" style="margin-bottom:8px">${rt(st.rating)}</div><div class="grid">`+st.items.map((it,i)=>`<div class="card">${it[3]?`<img class="ph" src="${it[3]}" alt="">`:""}<div class="row"><b>${esc(it[0])}</b><span>${inr(it[1])}</span></div><div style="margin-top:8px">${(it[2]??20)<=0?`<span class="tag" style="background:#fbdcd9;color:#a1271f">Out of stock</span>`:U.cart[st.id+"-"+i]?`<div class="qty"><button onclick="chg('${st.id}-${i}',-1)" aria-label="Remove one">-</button><b>${U.cart[st.id+"-"+i]}</b><button onclick="chg('${st.id}-${i}',1)" aria-label="Add one">+</button></div>`:`<button class="btn" onclick="chg('${st.id}-${i}',1)">Add to cart</button>`}</div></div>`).join("")+`</div></div><div>${cartView()}</div></div>`;
+ }
+ $("#app").innerHTML=h;
+}
+function chg(k,n){
+ const sid=+k.split("-")[0];
+ if(U.cartStore&&U.cartStore!==sid&&Object.keys(U.cart).length){U.cart={};toast("Cart cleared - one store per order")}
+ const it=S.stores.find(s=>s.id===sid).items[+k.split("-")[1]];if(n>0&&(U.cart[k]||0)>=(it[2]??20))return toast("Only "+(it[2]??20)+" in stock");U.cartStore=sid;U.cart[k]=(U.cart[k]||0)+n;if(U.cart[k]<=0)delete U.cart[k];cust();
+}
+function cartView(){
+ const ks=Object.keys(U.cart);
+ if(!ks.length)return`<div class="card"><h3>Your cart</h3><p class="mut">Cart is empty. Add items from this store.</p></div>`;
+ const st=S.stores.find(s=>s.id===U.cartStore);
+ const lines=ks.map(k=>{const it=st.items[+k.split("-")[1]];return{n:it[0],q:U.cart[k],p:it[1]}});
+ const sub=lines.reduce((a,l)=>a+l.q*l.p,0),f=fee({pos:U.pos,storeId:st.id});
+ return`<div class="card stack"><h3>Your cart - ${esc(st.name)}</h3>${lines.map(l=>`<div class="row"><span>${esc(l.n)} x ${l.q}</span><span>${inr(l.q*l.p)}</span></div>`).join("")}
+ <div class="row mut"><span>Delivery fee</span><span>${inr(f)}</span></div><div class="row"><b>Total</b><b>${inr(sub+f)}</b></div>
+ <input id="nm" placeholder="Your name" style="width:100%"><input id="ad" placeholder="Delivery address" style="width:100%">
+ <div class="mut">${U.pos?"Delivery pin: your current location":"Tip: tap 'Use my location' for accurate delivery and fee."}</div>
+ <div class="pay"><b>Payment</b>
+ ${[["cod","Cash on delivery"],["upi","UPI (GPay, PhonePe, Paytm)"],["online","Card / Net banking"]].map(([v,l])=>`<label><input type="radio" name="pay" ${U.pay===v?"checked":""} onchange="U.pay='${v}';payUI()"> ${l}</label>`).join("")}
+ <div id="payx"></div></div>
+ <button class="btn" onclick="place(${sub},${f})">Place order</button></div>`;
+}
+function payUI(){const x=$("#payx");if(!x)return;x.innerHTML=U.pay==="upi"?`<span class="mut">Next screen la GPay, PhonePe, Paytm illa vera UPI app select pannalam. On a phone the app opens directly.</span>`:U.pay==="online"?`<span class="mut">You will pay securely with card or net banking on the next screen.</span>`:`<span class="mut">Pay cash to the delivery partner.</span>`}
+async function place(sub,f){
+ const nm=$("#nm").value.trim(),ad=$("#ad").value.trim();
+ if(!nm||!ad)return toast("Enter your name and address");
+ const lines=Object.keys(U.cart).map(k=>[+k.split("-")[1],U.cart[k]]);
+ const j=await api("/orders","POST",{storeId:U.cartStore,lines,name:nm,addr:ad,pos:U.pos,pay:U.pay==="cod"?"cod":"online",via:U.pay});
+ if(!j)return;
+ addMine(j.order.id);
+ const done=()=>{U.cart={};U.store=null;sync(true)};
+ if(!j.rzp){toast("Order placed");return done()}
+ if(!window.Razorpay){toast("Payment window could not load. Check your internet.");return done()}
+ const cfg=U.pay==="upi"?{display:{blocks:{upi:{name:"Pay using UPI",instruments:[{method:"upi",apps:["google_pay","phonepe","paytm"]}]}},sequence:["block.upi"],preferences:{show_default_blocks:false}}}:{display:{blocks:{other:{name:"Card or net banking",instruments:[{method:"card"},{method:"netbanking"}]}},sequence:["block.other"],preferences:{show_default_blocks:false}}};
+ new Razorpay({config:cfg,key:j.rzp.key,amount:j.rzp.amount,currency:"INR",name:"Namma Kadai",order_id:j.rzp.orderId,prefill:{name:nm},
+  handler:async r=>{const v=await api("/payments/verify","POST",{orderId:j.order.id,...r});toast(v?"Payment received. Order placed":"Payment could not be verified");done()},
+  modal:{ondismiss:()=>{toast("Payment not completed. Order is on hold.");done()}}}).open();
+}
+function steps(o){return`<div class="steps" title="${STAGES[o.stage]}">${STAGES.map((s,i)=>`<i class="${i<=o.stage?"d":""}"></i>`).join("")}</div>`}
+function myOrders(){
+ if(!S.orders.length)return"";
+ return`<h2 style="margin-top:22px">Your orders</h2><div class="grid">`+S.orders.map(o=>{const p=S.partners.find(x=>x.id===o.partner);return`<div class="card"><div class="row"><b>#${o.id}</b><span class="tag">${o.pay!=="cod"&&!o.paid?"payment pending":STAGES[o.stage]}</span></div><div class="mut">${esc(S.stores.find(s=>s.id===o.storeId).name)}</div><div>${o.items.map(i=>esc(i[0])+" x"+i[1]).join(", ")}</div><div class="row"><span>${inr(o.total)}</span><span class="mut">${o.pay==="cod"?"Cash on delivery":o.via==="upi"?"Paid by UPI":"Paid online"}</span></div>${p?`<div class="mut">Delivery partner: ${esc(p.name)}</div>`:""}${o.partnerPos?`<a href="https://www.google.com/maps?q=${o.partnerPos.lat},${o.partnerPos.lng}" target="_blank" rel="noopener">Track delivery partner on map${U.pos?" ("+km(U.pos,o.partnerPos).toFixed(1)+" km from you)":""}</a>`:""}${steps(o)}${rateBox(o)}</div>`}).join("")+`</div>`;
+}
+
+function owner(){
+ let st=S.stores.find(s=>s.id===U.owner);
+ if(!st&&S.stores.length){U.owner=S.stores[0].id;st=S.stores[0]}
+ if(!st){newStore();return}
+ if(!U.ok[st.id]){$("#app").innerHTML=`<div class="bar"><select onchange="U.owner=+this.value;owner()" aria-label="Choose your store">${S.stores.map(s=>`<option value="${s.id}" ${s.id===st.id?"selected":""}>${esc(s.name)}</option>`).join("")}</select><button class="btn alt" onclick="newStore()">Register new store</button></div><div class="card stack" style="max-width:360px"><h3>Unlock ${esc(st.name)}</h3><input id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="4-digit store PIN"><button class="btn" onclick="unlock()">Unlock store</button><div class="mut">Demo stores use PIN 1234.</div></div>`;return}
+ const os=S.orders.filter(o=>o.storeId===st.id);
+ $("#app").innerHTML=`<div class="bar"><select onchange="U.owner=+this.value;owner()" aria-label="Choose your store">${S.stores.map(s=>`<option value="${s.id}" ${s.id===st.id?"selected":""}>${esc(s.name)}</option>`).join("")}</select><button class="btn alt" onclick="newStore()">Register new store</button></div>
+ <div class="two"><div><h2>Orders for ${esc(st.name)}</h2><div class="grid">${os.map(o=>`<div class="card stack"><div class="row"><b>#${o.id} - ${esc(o.name)}</b><span class="tag">${STAGES[o.stage]}</span></div><div>${o.items.map(i=>esc(i[0])+" x"+i[1]).join(", ")}</div><div class="mut">${esc(o.addr)}</div><div class="row"><span>${inr(o.total)}</span><span class="mut">${o.pay==="cod"?"Collect cash on delivery":"Already paid"}</span></div>${o.rating?`<div class="mut">Customer rating: ${stars(o.rating.store)}${o.rating.comment?" - "+esc(o.rating.comment):""}</div>`:""}${o.stage===0?`<button class="btn" onclick="adv(${o.id},1)">Accept order</button>`:o.stage===1?`<button class="btn y" onclick="assign(${o.id})">Assign nearest delivery partner</button>`:""}</div>`).join("")||`<p class="mut">No orders yet. New orders from customers show up here.</p>`}</div></div>
+ <div class="card stack"><h3>Add a product</h3><input id="pn" placeholder="Product name"><input id="pf" type="file" accept="image/*" aria-label="Product photo"><input id="pp" type="number" min="1" placeholder="Price in rupees"><input id="ps" type="number" min="0" placeholder="Stock count (default 20)"><button class="btn" onclick="addItem()">Add product</button><h3>Your products</h3>${st.items.map((it,i)=>`<div class="pr"><span>${esc(it[0])} <span class="mut">${inr(it[1])}</span></span><input type="number" min="0" value="${it[2]??20}" onchange="setStock(${i},this.value)" aria-label="Stock for ${esc(it[0])}"><button class="btn alt" onclick="delItem(${i})">Delete</button></div>`).join("")||`<p class="mut">No products yet. Add your first product above.</p>`}</div></div>`;
+}
+async function unlock(){
+ const pin=$("#pin").value;
+ const r=await fetch(apiUrl("/stores/"+U.owner+"/orders"),{headers:{"x-store-pin":pin}}).catch(()=>null);
+ if(r&&r.ok){U.ok[U.owner]=true;U.pins[U.owner]=pin;sync(true)}else toast(r?"Wrong PIN. Try again.":"Cannot reach the server.")}
+const ph=()=>({"x-store-pin":U.pins[U.owner]});
+async function setStock(i,v){if(await api("/stores/"+U.owner+"/items/"+i,"PATCH",{stock:Math.max(0,+v||0)},ph())){toast("Stock updated");sync(true)}}
+async function delItem(i){if(await api("/stores/"+U.owner+"/items/"+i,"DELETE",null,ph())){toast("Product deleted");sync(true)}}
+function addItem(){const n=$("#pn").value.trim(),p=+$("#pp").value,sv=$("#ps").value,f=$("#pf").files[0],stock=sv===""?20:Math.max(0,+sv);if(!n||p<=0)return toast("Enter product name and price");const done=async img=>{if(await api("/stores/"+U.owner+"/items","POST",{name:n,price:p,stock,photo:img},ph())){toast("Product added");sync(true)}};if(!f)return done("");const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas"),k=Math.min(1,240/im.width);c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);done(c.toDataURL("image/jpeg",.7))};im.src=r.result};r.readAsDataURL(f)}
+function newStore(){
+ $("#app").innerHTML=`<div class="card stack" style="max-width:380px"><h3>Register your store</h3><input id="rn" placeholder="Store name"><select id="rt" aria-label="Store type"><option value="mini">Mini store</option><option value="super">Supermarket</option></select><input id="ra" placeholder="Area (example: Adyar)"><input id="rp" type="password" inputmode="numeric" maxlength="4" placeholder="Set 4-digit PIN"><div class="mut">Allow location when asked, so customers see correct distance.</div><div class="row"><button class="btn" onclick="regStore()">Register store</button><button class="btn alt" onclick="owner()">Cancel</button></div></div>`;
+}
+function regStore(){
+ const name=$("#rn").value.trim(),pin=$("#rp").value,type=$("#rt").value,area=$("#ra").value.trim()||"Your area";
+ if(!name)return toast("Enter your store name");
+ if(!/^\d{4}$/.test(pin))return toast("PIN must be 4 digits");
+ const add=async(pos,msg)=>{const j=await api("/stores","POST",{name,type,area,pin,lat:pos.lat,lng:pos.lng});if(j){U.owner=j.id;U.ok[j.id]=true;U.pins[j.id]=pin;toast(msg);sync(true)}};
+ const dflt={lat:13.0827,lng:80.2707};
+ getPosition({timeout:6000},p=>add({lat:p.coords.latitude,lng:p.coords.longitude},"Store registered at your location"),()=>add(dflt,"Store registered (location unavailable)"));
+}
+async function adv(id,n){const o=S.orders.find(o=>o.id===id);const act=n===1?"accept":n===3?"pickup":"deliver";if(await api("/orders/"+id,"PATCH",{action:act},{"x-store-pin":U.pins[o.storeId]||"",...ph2()}))sync(true)}
+async function assign(id){const o=S.orders.find(o=>o.id===id);const j=await api("/orders/"+id,"PATCH",{action:"assign"},{"x-store-pin":U.pins[o.storeId]||""});if(j){toast("Assigned to "+j.partnerName);sync(true)}}
+const ph2=()=>({"x-partner-id":String(U.partner),"x-partner-pin":U.ppin||""});
+function setPartner(j,pin){U.partner=j.id;U.pname=j.name;U.ppin=pin;try{sessionStorage.setItem(KEY+"-p",JSON.stringify({id:j.id,name:j.name,pin}))}catch(e){}sync(true)}
+async function pLogin(){const j=await api("/partners/login","POST",{phone:$("#lp").value.trim(),pin:$("#lq").value});if(j)setPartner(j,$("#lq").value)}
+async function pReg(){const pin=$("#rq2").value;const j=await api("/partners","POST",{name:$("#rn2").value,phone:$("#rp2").value.trim(),pin});if(j){toast("Registered. Welcome!");setPartner(j,pin)}}
+function stopLocationWatch(){
+ if(U.watchId==null)return;
+ const id=U.watchId;U.watchId=null;
+ if(U.nativeWatch){U.nativeWatch=false;if(id!=="starting")nativeGeo()?.clearWatch({id:String(id)}).catch(()=>toast("Could not stop location sharing"))}
+ else navigator.geolocation.clearWatch(id);
+}
+function pOut(){stopLocationWatch();U.partner=null;U.ppin="";try{sessionStorage.removeItem(KEY+"-p")}catch(e){}sync(true)}
+function sendPartnerLocation(p){
+ if(!p)return;
+ const t=Date.now();if(t-U.lastLoc<15000)return;U.lastLoc=t;
+ fetch(apiUrl("/partners/"+U.partner+"/location"),{method:"POST",headers:{"Content-Type":"application/json",...ph2()},body:JSON.stringify({lat:p.coords.latitude,lng:p.coords.longitude})}).catch(()=>{});
+}
+function shareLoc(){
+ if(U.watchId!=null)return;
+ U.lastLoc=0;
+ const plugin=nativeGeo();
+ if(plugin){
+  U.watchId="starting";U.nativeWatch=true;
+  plugin.watchPosition({enableHighAccuracy:true,timeout:20000,minimumUpdateInterval:15000},(p,e)=>{
+   if(e){stopLocationWatch();toast("Location blocked. Allow location in app settings.");rider();return}
+   sendPartnerLocation(p);
+  }).then(id=>{if(U.watchId==="starting")U.watchId=id;else plugin.clearWatch({id}).catch(()=>{})}).catch(()=>{
+   U.watchId=null;U.nativeWatch=false;toast("Location blocked. Allow location in app settings.");rider();
+  });
+ }else if(navigator.geolocation){
+  U.watchId=navigator.geolocation.watchPosition(sendPartnerLocation,()=>{
+   stopLocationWatch();toast("Location blocked. Allow location in browser settings.");rider();
+  },{enableHighAccuracy:true});
+ }else return toast("Location is not supported on this device");
+ toast("Sharing live location");rider();
+}
+function rider(){
+ if(!U.partner){
+  $("#app").innerHTML=`<div class="two"><div class="card stack"><h3>Partner login</h3><input id="lp" inputmode="numeric" maxlength="10" placeholder="Phone number"><input id="lq" type="password" inputmode="numeric" maxlength="4" placeholder="4-digit PIN"><button class="btn" onclick="pLogin()">Login</button><div class="mut">Demo partners: phone 9000000001 / 9000000002 / 9000000003, PIN 1234.</div></div><div class="card stack"><h3>Become a delivery partner</h3><input id="rn2" placeholder="Your name"><input id="rp2" inputmode="numeric" maxlength="10" placeholder="Phone number"><input id="rq2" type="password" inputmode="numeric" maxlength="4" placeholder="Set 4-digit PIN"><button class="btn y" onclick="pReg()">Register</button></div></div>`;return}
+ const os=S.orders.filter(o=>o.partner===U.partner&&o.stage>=2);
+ $("#app").innerHTML=`<div class="bar"><b>Hi ${esc(U.pname)}</b> <span class="mut">${rt((S.partners.find(p=>p.id===U.partner)||{}).rating)}</span><button class="btn ${U.watchId!=null?"alt":"y"}" onclick="shareLoc()">${U.watchId!=null?"Sharing live location":"Share my live location"}</button><button class="btn alt" onclick="pOut()">Logout</button></div><h2>Deliveries assigned to you</h2><div class="grid">${os.map(o=>{const st=S.stores.find(s=>s.id===o.storeId);return`<div class="card stack"><div class="row"><b>#${o.id}</b><span class="tag">${STAGES[o.stage]}</span></div><div>Pick up: ${esc(st.name)}, ${esc(st.area)}</div><div>Deliver to: ${esc(o.name)}, ${esc(o.addr)}</div>${o.pos?`<a href="https://www.google.com/maps/dir/?api=1&destination=${o.pos.lat},${o.pos.lng}" target="_blank" rel="noopener">Open customer location in Maps</a>`:""}<div class="row"><b>${o.pay==="cod"?"Collect "+inr(o.total):"Prepaid"}</b><span class="mut">Earn ${inr(o.fee)}</span></div>${o.stage===2?`<button class="btn" onclick="adv(${o.id},3)">Mark picked up</button>`:o.stage===3?`<button class="btn y" onclick="adv(${o.id},4)">Mark delivered</button>`:""}</div>`}).join("")||`<p class="mut">No deliveries yet. Store owners will assign orders to you. Keep location sharing on so you get nearby orders.</p>`}</div>`;
+}
+const ah=()=>({"x-admin-key":U.akey});
+async function aLogin(){const pw=$("#ak").value;const j=await api("/admin/overview","GET",null,{"x-admin-key":pw});if(j){U.akey=pw;U.ov=j;sync(true)}}
+function aOut(){U.akey=null;U.ov=null;sync(true)}
+async function aPin(kind,id){if(await api("/admin/"+kind+"/"+id+"/pin","POST",{pin:$("#pin-"+kind+"-"+id).value},ah())){toast("PIN updated");sync(true)}}
+async function aDel(kind,id){if(!confirm("Delete this permanently?"))return;if(await api("/admin/"+kind+"/"+id,"DELETE",null,ah())){toast("Deleted");sync(true)}}
+async function aClear(){if(!confirm("Remove all demo stores and demo delivery partners?"))return;const j=await api("/admin/clear-demo","POST",{},ah());if(j){toast("Removed "+j.removedStores+" stores and "+j.removedPartners+" partners");sync(true)}}
+function admin(){
+ if(!U.akey||!U.ov){$("#app").innerHTML=`<div class="card stack" style="max-width:360px"><h3>Admin login</h3><input id="ak" type="password" placeholder="Admin password"><button class="btn" onclick="aLogin()">Login</button><div class="mut">Password is ADMIN_PASSWORD in your .env file.</div></div>`;return}
+ const o=U.ov,pinBox=(k,id)=>`<div class="qty"><input id="pin-${k}-${id}" type="password" inputmode="numeric" maxlength="4" placeholder="New PIN" style="width:90px" aria-label="New PIN"><button class="btn alt" onclick="aPin('${k}',${id})">Set PIN</button><button class="btn alt" onclick="aDel('${k}',${id})">Delete</button></div>`;
+ $("#app").innerHTML=`<div class="bar"><b>Admin panel</b><button class="btn alt" onclick="aOut()">Logout</button></div>
+ <div class="grid">${[["Stores",o.stats.stores],["Delivery partners",o.stats.partners],["Orders",o.stats.orders],["Delivered",o.stats.delivered],["Delivered sales",inr(o.stats.sales)]].map(([l,v])=>`<div class="card"><div class="mut">${l}</div><h2>${v}</h2></div>`).join("")}</div>
+ ${o.stats.demo?`<div class="card stack" style="margin-top:16px;border-left:6px solid var(--r)"><b>Demo data found (${o.stats.demo} stores/partners use PIN 1234)</b><div class="mut">Remove before real launch, so strangers cannot log in with 1234.</div><button class="btn" onclick="aClear()">Remove demo stores and partners</button></div>`:""}
+ <h2 style="margin-top:20px">Stores</h2><div class="stack">${o.stores.map(s=>`<div class="card row" style="flex-wrap:wrap"><div><b>${esc(s.name)}</b> <span class="tag ${s.type}">${s.type==="super"?"Supermarket":"Mini store"}</span>${s.demo?` <span class="tag" style="background:#fbdcd9;color:#a1271f">demo</span>`:""}<div class="mut">${esc(s.area)} - ${s.items} products - ${s.orders} orders - ${rt(s.rating)}</div></div>${pinBox("stores",s.id)}</div>`).join("")}</div>
+ <h2 style="margin-top:20px">Delivery partners</h2><div class="stack">${o.partners.map(p=>`<div class="card row" style="flex-wrap:wrap"><div><b>${esc(p.name)}</b> <span class="tag">${p.online?"online":"offline"}</span>${p.demo?` <span class="tag" style="background:#fbdcd9;color:#a1271f">demo</span>`:""}<div class="mut">${esc(p.phone||"no phone")} - ${rt(p.rating)}</div></div>${pinBox("partners",p.id)}</div>`).join("")}</div>
+ <h2 style="margin-top:20px">Recent orders</h2><div class="grid">${o.orders.map(r=>`<div class="card"><div class="row"><b>#${r.id}</b><span class="tag">${r.pay!=="cod"&&!r.paid?"payment pending":STAGES[r.stage]}</span></div><div class="mut">${esc(r.store)} - ${esc(r.name)}</div><div>${inr(r.total)} <span class="mut">${r.pay==="cod"?"COD":r.via==="upi"?"UPI":"Card/Net banking"}</span></div></div>`).join("")||`<p class="mut">No orders yet.</p>`}</div>`;
+}
+const rt=r=>r&&r.count?`★ ${r.avg.toFixed(1)} (${r.count})`:"No ratings yet";
+const stars=n=>"★".repeat(n||0)+"☆".repeat(5-(n||0));
+function starRow(id,k,v){return[1,2,3,4,5].map(n=>`<button class="star ${n<=v?"on":""}" onclick="setStar(${id},'${k}',${n})" aria-label="${n} star${n>1?"s":""}">★</button>`).join("")}
+function rateBox(o){
+ if(o.stage!==4)return"";
+ if(o.rating)return`<div class="mut" style="margin-top:8px">Your rating: store ${stars(o.rating.store)}${o.partner?", delivery "+stars(o.rating.partner):""}</div>`;
+ const r=U.rate[o.id]||(U.rate[o.id]={s:0,p:0,c:""});
+ return`<div class="stack" style="margin-top:10px;border-top:1px solid var(--line);padding-top:8px"><b>Rate your order</b><div class="row"><span>Store</span><span>${starRow(o.id,"s",r.s)}</span></div>${o.partner?`<div class="row"><span>Delivery</span><span>${starRow(o.id,"p",r.p)}</span></div>`:""}<input placeholder="Comment (optional)" maxlength="200" value="${esc(r.c)}" oninput="U.rate[${o.id}].c=this.value" style="width:100%"><button class="btn" onclick="sendRating(${o.id})">Submit rating</button></div>`}
+function setStar(id,k,n){U.rate[id][k]=n;cust()}
+async function sendRating(id){const r=U.rate[id],o=S.orders.find(o=>o.id===id);if(!r.s||(o.partner&&!r.p))return toast("Please tap the stars first");if(await api("/orders/"+id+"/rating","POST",{store:r.s,partner:o.partner?r.p:null,comment:r.c})){toast("Thanks for rating!");sync(true)}}
+function locate(){
+ getPosition({timeout:8000},p=>{U.pos={lat:p.coords.latitude,lng:p.coords.longitude};toast("Location set - nearest stores first");render()},()=>toast("Location blocked. Allow location in app or browser settings."));
+}
+try{const sp=JSON.parse(sessionStorage.getItem(KEY+"-p"));if(sp){U.partner=sp.id;U.pname=sp.name;U.ppin=sp.pin}}catch(e){}
+sync(true);
+</script>
+</body>
+</html>

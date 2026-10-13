@@ -1,0 +1,8 @@
+{
+  "appId": "com.nammakadai.app",
+  "appName": "Namma Kadai",
+  "webDir": "public",
+  "android": {
+    "allowMixedContent": false
+  }
+}
